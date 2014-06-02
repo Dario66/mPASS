@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 public class MapActivity extends Activity
 {
+	//prova
 	private FsqVenue venue;
 	private GPSTracker gps;
 	private GoogleMap mMap;
@@ -175,7 +176,7 @@ public class MapActivity extends Activity
         return true;
     }
 
-    //Resetta la mappa se c'è bisogno
+    //Resetta la mappa se c'ï¿½ bisogno
     private Boolean setUpMapIfNeeded()
     {
     	Boolean needed=false;
@@ -197,7 +198,7 @@ public class MapActivity extends Activity
     public void setMarkers(JSONArray venues)
     {
     	String name, ll, fsqid, min_fsqid="", accl;
-    	float min_distance=3000; //Ne cerco uno solo se è al massimo distante un tot di metri, in questo caso 3 km
+    	float min_distance=3000; //Ne cerco uno solo se ï¿½ al massimo distante un tot di metri, in questo caso 3 km
     	double lat = 0, lng = 0;
     	venue=new FsqVenue();
     	
@@ -367,7 +368,7 @@ public class MapActivity extends Activity
     @Override
     public void onBackPressed() 
     {
-    	//Così la pressione del tasto back non provoca nessun'azione e in caso la MapActivity non ritorna
+    	//Cosï¿½ la pressione del tasto back non provoca nessun'azione e in caso la MapActivity non ritorna
     	//all'activity di creazione dell'utente
     }
     
