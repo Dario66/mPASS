@@ -1,4 +1,4 @@
-﻿package com.example.fstest;
+package com.example.fstest;
 
 import java.util.HashMap;
 import org.json.JSONArray;
@@ -40,7 +40,7 @@ import android.widget.Toast;
 
 public class MapActivity extends Activity
 {
-	//sisisisisi
+	//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 
 
@@ -179,7 +179,7 @@ public class MapActivity extends Activity
         return true;
     }
 
-    //Resetta la mappa se c'� bisogno
+    //Resetta la mappa se c'  bisogno
     private Boolean setUpMapIfNeeded()
     {
     	Boolean needed=false;
@@ -201,7 +201,7 @@ public class MapActivity extends Activity
     public void setMarkers(JSONArray venues)
     {
     	String name, ll, fsqid, min_fsqid="", accl;
-    	float min_distance=3000; //Ne cerco uno solo se � al massimo distante un tot di metri, in questo caso 3 km
+    	float min_distance=3000; //Ne cerco uno solo se   al massimo distante un tot di metri, in questo caso 3 km
     	double lat = 0, lng = 0;
     	venue=new FsqVenue();
     	
@@ -371,7 +371,7 @@ public class MapActivity extends Activity
     @Override
     public void onBackPressed() 
     {
-    	//Cos� la pressione del tasto back non provoca nessun'azione e in caso la MapActivity non ritorna
+    	//Cos  la pressione del tasto back non provoca nessun'azione e in caso la MapActivity non ritorna
     	//all'activity di creazione dell'utente
     }
     
