@@ -40,7 +40,6 @@ import android.widget.Toast;
 
 public class MapActivity extends Activity
 {
-pro
 	private FsqVenue venue;
 	private GPSTracker gps;
 	private GoogleMap mMap;
