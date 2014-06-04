@@ -40,7 +40,7 @@ import android.widget.Toast;
 
 public class MapActivity extends Activity
 {
-	//prova si
+	//prova si ora va bene
 
 
 
