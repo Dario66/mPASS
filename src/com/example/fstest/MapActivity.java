@@ -40,10 +40,6 @@ import android.widget.Toast;
 
 public class MapActivity extends Activity
 {
-	//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-
-
 	private FsqVenue venue;
 	private GPSTracker gps;
 	private GoogleMap mMap;
@@ -109,6 +105,9 @@ public class MapActivity extends Activity
         setUpMapIfNeeded();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(),gps.getLongitude()) , 14.0f));
         mMap.setMyLocationEnabled(true);
+
+
+
 
         //Questo codice permette di far vedere sulla mappa solo i luoghi vicini presenti nella fusion table
         lat=String.valueOf(gps.getLatitude());
