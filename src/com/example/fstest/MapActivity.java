@@ -1,4 +1,4 @@
-package com.example.fstest;
+﻿package com.example.fstest;
 
 import java.util.HashMap;
 import org.json.JSONArray;
@@ -40,7 +40,10 @@ import android.widget.Toast;
 
 public class MapActivity extends Activity
 {
-	//
+	//prova si
+
+
+
 	private FsqVenue venue;
 	private GPSTracker gps;
 	private GoogleMap mMap;
