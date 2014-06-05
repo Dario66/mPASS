@@ -83,7 +83,7 @@ public class MapActivity extends Activity
         preferences[1]=true; //Parzialmente accessibile
         preferences[2]=true; //Non accessibile
         
-        tv_notif=(TextView)findViewById(R.id.tv_notification);
+        //tv_notif=(TextView)findViewById(R.id.tv_notification);
 		btn_notif=(Button)findViewById(R.id.btn_notification);
         
 		ImageButton btn_quiz=(ImageButton)findViewById(R.id.btn_quiz);
@@ -113,6 +113,11 @@ public class MapActivity extends Activity
         mMap.setMyLocationEnabled(true);
 
 		//Caricamento mappa OSM
+myOpenMapView = (MapView)findViewById(R.id.openmapview);
+myOpenMapView.setBuiltInZoomControls(true);
+myMapController = myOpenMapView.getController();
+myMapController.setZoom(2);
+
 
 
         //Questo codice permette di far vedere sulla mappa solo i luoghi vicini presenti nella fusion table
