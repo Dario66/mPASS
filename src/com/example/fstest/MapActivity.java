@@ -117,6 +117,10 @@ myOpenMapView = (MapView)findViewById(R.id.openmapview);
 myOpenMapView.setBuiltInZoomControls(true);
 myMapController = myOpenMapView.getController();
 myMapController.setZoom(2);
+//trova la mia posizione
+myLocationOverlay = new MyLocationOverlay(this,myOpenMapView);
+myOpenMapView.getOverlays().add(myLocationOverlay);
+myOpenMapView.postInvalidate();
 
 
 
