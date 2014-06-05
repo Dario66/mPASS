@@ -40,6 +40,12 @@ import android.widget.Toast;
 
 public class MapActivity extends Activity
 {
+	//variabili per OSM
+	private MapView myOpenMapView;
+	private MapController myMapController;
+	ArrayList<OverlayItem> anotherOverlayItemArray;
+	MyLocationOverlay myLocationOverlay = null;
+	//
 	private FsqVenue venue;
 	private GPSTracker gps;
 	private GoogleMap mMap;
