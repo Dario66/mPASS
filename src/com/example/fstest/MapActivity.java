@@ -106,7 +106,7 @@ public class MapActivity extends Activity
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(),gps.getLongitude()) , 14.0f));
         mMap.setMyLocationEnabled(true);
 
-
+		//Caricamento mappa OSM
 
 
         //Questo codice permette di far vedere sulla mappa solo i luoghi vicini presenti nella fusion table
