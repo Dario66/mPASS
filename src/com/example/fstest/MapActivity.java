@@ -106,12 +106,13 @@ public class MapActivity extends Activity
         spinner.show();
         
         //Caricamento mappa normale
+/*
         mMap=((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
         ftclient=new FTClient(context);
         setUpMapIfNeeded();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(),gps.getLongitude()) , 14.0f));
         mMap.setMyLocationEnabled(true);
-
+*/
 		//Caricamento mappa OSM
 myOpenMapView = (MapView)findViewById(R.id.openmapview);
 myOpenMapView.setBuiltInZoomControls(true);
