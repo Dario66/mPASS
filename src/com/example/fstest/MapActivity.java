@@ -1,8 +1,15 @@
 package com.example.fstest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MyLocationOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+
 import com.example.fstest.foursquare.FsqVenue;
 import com.example.fstest.fusiontables.FTClient;
 import com.example.fstest.utils.GPSTracker;
@@ -14,6 +21,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -201,7 +209,7 @@ myOpenMapView.postInvalidate();
     	if (mMap == null) 
     	{
     		needed=true;
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+          //  mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                                 .getMap();
             ftclient.setQuery(query_all);
             ftclient.query("setmarkers");
