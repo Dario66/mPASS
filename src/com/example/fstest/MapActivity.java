@@ -210,7 +210,7 @@ myOpenMapView.postInvalidate();
     	{
     		needed=true;
           //  mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
-                                .getMap();
+                                //.getMap();
             ftclient.setQuery(query_all);
             ftclient.query("setmarkers");
             if (mMap != null) {}
