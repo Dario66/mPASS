@@ -2,14 +2,17 @@ package com.example.fstest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.MyLocationOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-
+import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
 import com.example.fstest.foursquare.FsqVenue;
 import com.example.fstest.fusiontables.FTClient;
 import com.example.fstest.utils.GPSTracker;
@@ -21,7 +24,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -46,14 +48,12 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 public class MapActivity extends Activity
 {
-	//variabili per OSM
-	private MapView myOpenMapView;
-	private MapController myMapController;
-	ArrayList<OverlayItem> anotherOverlayItemArray;
-	MyLocationOverlay myLocationOverlay = null;
-	//
+
+
 	private FsqVenue venue;
 	private GPSTracker gps;
 	private GoogleMap mMap;
@@ -74,7 +74,17 @@ public class MapActivity extends Activity
     private String query_park="SELECT ROWID, fsqid, name, geo, accessLevel FROM "+Costants.tableId+" WHERE parking in (@VALUES)";
 
     private Button btn_notif;
-    private TextView tv_notif;
+    //private TextView tv_notif;
+    
+    
+    
+    
+    private MapView myOpenMapView;
+	private MapController myMapController;
+	ArrayList<OverlayItem> anotherOverlayItemArray;
+	
+	MyLocationOverlay myLocationOverlay = null;
+    
     
     @Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -91,7 +101,7 @@ public class MapActivity extends Activity
         preferences[1]=true; //Parzialmente accessibile
         preferences[2]=true; //Non accessibile
         
-        //tv_notif=(TextView)findViewById(R.id.tv_notification);
+       // tv_notif=(TextView)findViewById(R.id.tv_notification);
 		btn_notif=(Button)findViewById(R.id.btn_notification);
         
 		ImageButton btn_quiz=(ImageButton)findViewById(R.id.btn_quiz);
@@ -105,36 +115,58 @@ public class MapActivity extends Activity
 			}
 		});
 		
-        gps=new GPSTracker(this);
-        spinner=new ProgressDialog(this);
-        spinner.setMessage("Caricamento...");
-        spinner.setCancelable(false);
-        spinner.setMax(100); 
-        spinner.setProgress(0); 
-        spinner.show();
-        
+        //gps=new GPSTracker(this);
+        //spinner=new ProgressDialog(this);
+        //spinner.setMessage("Caricamento...");
+        //spinner.setCancelable(false);
+        //spinner.setMax(100); 
+        //spinner.setProgress(0); 
+        //spinner.show();
+       
         //Caricamento mappa normale
-/*
-        mMap=((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+       /* mMap=((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
         ftclient=new FTClient(context);
         setUpMapIfNeeded();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(),gps.getLongitude()) , 14.0f));
-        mMap.setMyLocationEnabled(true);
-*/
-		//Caricamento mappa OSM
-myOpenMapView = (MapView)findViewById(R.id.openmapview);
-myOpenMapView.setBuiltInZoomControls(true);
-myMapController = myOpenMapView.getController();
-myMapController.setZoom(2);
-//trova la mia posizione
-myLocationOverlay = new MyLocationOverlay(this,myOpenMapView);
-myOpenMapView.getOverlays().add(myLocationOverlay);
-myOpenMapView.postInvalidate();
+        mMap.setMyLocationEnabled(true);*/
 
-
-
+        
+        myOpenMapView = (MapView)findViewById(R.id.openmapview);
+        myOpenMapView.setBuiltInZoomControls(true);
+        myMapController = myOpenMapView.getController();
+        myMapController.setZoom(6);
+        
+        myOpenMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+        
+        //AGGIUNTA DI MARKER NELLA MAPPA
+        
+      /*--- Create Another Overlay for multi marker
+        anotherOverlayItemArray = new ArrayList<OverlayItem>();
+        anotherOverlayItemArray.add(new OverlayItem(
+        		"0, 0", "0, 0", new GeoPoint(0, 0)));
+        anotherOverlayItemArray.add(new OverlayItem(
+        		"US", "US", new GeoPoint(gps.getLatitude(),gps.getLongitude())));
+        
+        ItemizedIconOverlay<OverlayItem> anotherItemizedIconOverlay 
+        	= new ItemizedIconOverlay<OverlayItem>(
+        			this, anotherOverlayItemArray, myOnItemGestureListener);
+        myOpenMapView.getOverlays().add(anotherItemizedIconOverlay);
+        */
+        
+        //Add Scale Bar
+        ScaleBarOverlay myScaleBarOverlay = new ScaleBarOverlay(this);
+        myOpenMapView.getOverlays().add(myScaleBarOverlay);
+        
+        //aggiungi la mia locazione con MyLocationOverlay
+        myLocationOverlay = new MyLocationOverlay(this, myOpenMapView);
+        myOpenMapView.getOverlays().add(myLocationOverlay);
+        myOpenMapView.postInvalidate();
+        
+        
+        
+        
         //Questo codice permette di far vedere sulla mappa solo i luoghi vicini presenti nella fusion table
-        lat=String.valueOf(gps.getLatitude());
+       /* lat=String.valueOf(gps.getLatitude());
         lng=String.valueOf(gps.getLongitude());
         temp_query_limit=query_limit.replace("@LAT", lat);
         temp_query_limit=temp_query_limit.replace("@LNG", lng);
@@ -143,8 +175,29 @@ myOpenMapView.postInvalidate();
         ftclient.queryOnNewThread("setmarkers");
         
         ViewGroup mapHost = (ViewGroup) findViewById(R.id.mapView);
-        mapHost.requestTransparentRegion(mapHost);
+        mapHost.requestTransparentRegion(mapHost);*/
     }
+    
+    OnItemGestureListener<OverlayItem> myOnItemGestureListener
+    = new OnItemGestureListener<OverlayItem>(){
+
+		@Override
+		public boolean onItemLongPress(int arg0, OverlayItem arg1) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean onItemSingleTapUp(int index, OverlayItem item) {
+			Toast.makeText(MapActivity.this, 
+					item.mDescription + "\n"
+					+ item.mTitle + "\n"
+					+ item.mGeoPoint.getLatitudeE6() + " : " + item.mGeoPoint.getLongitudeE6(), 
+					Toast.LENGTH_LONG).show();
+			return true;
+		}
+    	
+    };
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -175,18 +228,20 @@ myOpenMapView.postInvalidate();
 									public boolean onMenuItemClick(MenuItem item) 
 									{
 										switch (item.getItemId()) 
-										{
-											case R.id.item_all:clearMap();
-															   spinner.show();
-			        						   				   ftclient.setQuery(query_all);
-			        						   				   ftclient.queryOnNewThread("setmarkers");
-															   break;
-											case R.id.item_limit:clearMap();
-																 spinner.show();
-																 String temp_query_limit=query_limit.replace("@LAT", String.valueOf(gps.getLatitude()));
-																 temp_query_limit=temp_query_limit.replace("@LNG", String.valueOf(gps.getLongitude()));
-																 ftclient.setQuery(temp_query_limit);
-																 ftclient.queryOnNewThread("setmarkers");
+										{//solo luoghi vicino
+											case R.id.item_all: 
+															myOpenMapView = (MapView)findViewById(R.id.openmapview);
+									        				myOpenMapView.setBuiltInZoomControls(true);
+									        				myMapController = myOpenMapView.getController();
+									        				myMapController.setZoom(2);
+									        
+									        myOpenMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+								/*tt i luoghi presenti nelle fusion*/		  				   break;
+											case R.id.item_limit:
+															myOpenMapView = (MapView)findViewById(R.id.openmapview);
+															myOpenMapView.setBuiltInZoomControls(true);
+															myMapController = myOpenMapView.getController();
+															myMapController.setZoom(2);
 													break;
 										}
 										return false;
@@ -202,7 +257,7 @@ myOpenMapView.postInvalidate();
         return true;
     }
 
-    //Resetta la mappa se c'  bisogno
+    //Resetta la mappa se c'� bisogno
     private Boolean setUpMapIfNeeded()
     {
     	Boolean needed=false;
@@ -210,7 +265,7 @@ myOpenMapView.postInvalidate();
     	{
     		needed=true;
           //  mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
-                                //.getMap();
+            //                    .getMap();
             ftclient.setQuery(query_all);
             ftclient.query("setmarkers");
             if (mMap != null) {}
@@ -224,7 +279,7 @@ myOpenMapView.postInvalidate();
     public void setMarkers(JSONArray venues)
     {
     	String name, ll, fsqid, min_fsqid="", accl;
-    	float min_distance=3000; //Ne cerco uno solo se   al massimo distante un tot di metri, in questo caso 3 km
+    	float min_distance=3000; //Ne cerco uno solo se � al massimo distante un tot di metri, in questo caso 3 km
     	double lat = 0, lng = 0;
     	venue=new FsqVenue();
     	
@@ -344,17 +399,17 @@ myOpenMapView.postInvalidate();
 				                		quiz_intent.putExtra("venue", venue);
 				        				startActivity(quiz_intent);
 				        				btn_notif.setVisibility(View.GONE);
-				        			    tv_notif.setVisibility(View.GONE);
+				        			    //tv_notif.setVisibility(View.GONE);
 				        				btn_notif.setEnabled(false);
-				                		tv_notif.setEnabled(false);
+				                		//tv_notif.setEnabled(false);
 				                		break;
 	
 				                	case DialogInterface.BUTTON_NEGATIVE:
 				                		//No button clicked
 				                		btn_notif.setVisibility(View.GONE);
-				        			    tv_notif.setVisibility(View.GONE);
+				        			    //tv_notif.setVisibility(View.GONE);
 				        				btn_notif.setEnabled(false);
-				                		tv_notif.setEnabled(false);
+				                		//tv_notif.setEnabled(false);
 				                		break;
 				                }
 				            }
@@ -394,7 +449,7 @@ myOpenMapView.postInvalidate();
     @Override
     public void onBackPressed() 
     {
-    	//Cos  la pressione del tasto back non provoca nessun'azione e in caso la MapActivity non ritorna
+    	//Cos� la pressione del tasto back non provoca nessun'azione e in caso la MapActivity non ritorna
     	//all'activity di creazione dell'utente
     }
     
