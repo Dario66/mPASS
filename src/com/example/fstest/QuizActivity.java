@@ -1,5 +1,11 @@
 package com.example.fstest;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,6 +33,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 public class QuizActivity extends Activity 
 {
 	private FTClient ftclient;
@@ -40,12 +57,18 @@ public class QuizActivity extends Activity
 	private String date_for_log;
 	private FoursquareApp fsqapp;
 	
+	
+	
+	//DB POSTGRE
+			private Socket client;
+		    private PrintWriter printwriter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quiz);
-		
+		/*
 		user=new User(this);
 		spinner=new ProgressDialog(this);
 		ftclient=new FTClient(this);
@@ -72,14 +95,14 @@ public class QuizActivity extends Activity
 		fsqid=venue.id;
 		name=venue.name;
 		geo=venue.latitude.toString()+","+venue.longitude.toString();
-		
+		*/
 		RelativeLayout rl=(RelativeLayout) findViewById(R.id.quiz_layout);
 		rl.setGravity(Gravity.CENTER_HORIZONTAL);
 		
 		//Crea interfaccia per il questionario
 		
 		TextView venue_name=new TextView(this);
-		venue_name.setText("Questionnaire "+venue.name);
+		//venue_name.setText("Questionnaire "+venue.name);
 		venue_name.setId(41);
 		venue_name.setPadding(0, 0, 0, 20);
 		rl.addView(venue_name);
@@ -193,10 +216,12 @@ public class QuizActivity extends Activity
 				   default:break;
 				}
 				final String comment_txt=getCommentText(51);
+				
+				
 				//String query_txt="INSERT INTO 1JvwJIV2DOSiQSXeSCj8PA8uKuSmTXODy3QgikiQ (name, geo, accessLevel, comment, doorways, elevator, escalator, parking) ";
 				//query_txt=query_txt+"VALUES ('"+name+"', '"+geo+"', '"+squiz1+"', '"+comment_txt+"', '"+squiz2+"', '"+squiz3+"', '"+squiz4+"', '"+squiz5+"')";
 				//Log.d("Test", query_txt);
-				Date date=new Date();
+				/*Date date=new Date();
 				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String sdate=dateFormat.format(date);
 				date_for_log=sdate;
@@ -209,9 +234,9 @@ public class QuizActivity extends Activity
 				//Log.d("Debug", query_txt);
 				ftclient.setQuery(query_txt);
 				ftclient.queryOnNewThread("insertvenue");
-				
+				*/
 				//Quindi se siamo connessi a foursquare e la venue è all'interno del db di foursquare
-				if (fsqapp.hasAccessToken() && !fsqid.substring(0, 2).equals("NF"))
+				/*if (fsqapp.hasAccessToken() && !fsqid.substring(0, 2).equals("NF"))
 				{
 					Log.d("Debug", "Ok foursquare!");
 					new Thread()
@@ -230,12 +255,58 @@ public class QuizActivity extends Activity
 							}
 						}
 					}.start();
-				}
+				}*/
 			}
 		});
+		
+		
+		
+		//fine on click list
+		
+//INIZIO INVIO DATI POSIZIONE AL SERVER DATABASE
+		
+		final String message="PROVA";
+		final int  port=4444;
+		final String ip="192.168.1.102";
+		new Thread(new Runnable(){
+			
+			@Override
+			public void run(){
+				try{
+					
+					client=new Socket(ip,port);
+					printwriter =new PrintWriter(client.getOutputStream());
+					printwriter.write(message);
+					
+					
+					String hostName = ip;
+					int portNumber = port;
+
+					printwriter.flush();
+					printwriter.close();
+					client.close();
+				}
+				
+				catch(UnknownHostException e){
+					
+					e.printStackTrace();
+				}catch(IOException e){
+					e.printStackTrace();
+				}
+			}
+			
+		}).start();
+		
+		
+//FINE INVIO DATI AL SERVER DB
+		
+		
+		
+		
 		rl.addView(btn_submit);
 	}
-
+	
+	  
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
