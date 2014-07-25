@@ -1,5 +1,17 @@
 package com.example.fstest;
 
+import java.util.ArrayList;
+
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.MyLocationOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
+
 import com.example.fstest.foursquare.FsqVenue;
 import com.example.fstest.utils.GPSTracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,18 +38,46 @@ public class NewVenueActivity extends Activity
 	private GPSTracker gps;
 	private LatLng selectedLocation;
 	
+	
+	
+	//OSM
+	 private MapView myOpenMapView;
+		private MapController myMapController;
+		ArrayList<OverlayItem> anotherOverlayItemArray;
+		
+		MyLocationOverlay myLocationOverlay = null;
+	 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_venue);
-		gps=new GPSTracker(this);
+		
+		
+		myOpenMapView = (MapView)findViewById(R.id.openmapview2);
+        myOpenMapView.setBuiltInZoomControls(true);
+        myMapController = myOpenMapView.getController();
+        myMapController.setZoom(2);
+        
+        myOpenMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+		
+        //Add Scale Bar
+        ScaleBarOverlay myScaleBarOverlay = new ScaleBarOverlay(this);
+        myOpenMapView.getOverlays().add(myScaleBarOverlay);
+        
+        //aggiungi la mia locazione con MyLocationOverlay
+        myLocationOverlay = new MyLocationOverlay(this, myOpenMapView);
+        myOpenMapView.getOverlays().add(myLocationOverlay);
+        myOpenMapView.postInvalidate();
+		/*gps=new GPSTracker(this);
 		selectedLocation=new LatLng(gps.getLatitude(), gps.getLongitude());
 		mMap=((MapFragment)getFragmentManager().findFragmentById(R.id.map2)).getMap();
 		mMap.setMyLocationEnabled(true);
 		setUpMapIfNeeded();
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(),gps.getLongitude()) , 15.0f));
-		mMap.setOnMapClickListener(new OnMapClickListener() 
+		*/
+		/*mMap.setOnMapClickListener(new OnMapClickListener() 
 		{
 			@Override
 			public void onMapClick(LatLng point) 
@@ -48,11 +88,47 @@ public class NewVenueActivity extends Activity
 				.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 				selectedLocation=point;
 			}
-		});
-		maxid=getIntent().getExtras().getString("maxid");
-		Log.d("Debug", maxid);
+		});*/
+		//maxid=getIntent().getExtras().getString("maxid");
+		//Log.d("Debug", maxid);
 	}
+//GESTIRE IL TAP CON LA MAPPA OSM
+	 OnItemGestureListener<OverlayItem> myOnItemGestureListener
+	    = new OnItemGestureListener<OverlayItem>(){
 
+		 
+		 
+			@Override
+			public boolean onItemLongPress(int arg0, OverlayItem arg1) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean onItemSingleTapUp(int index, OverlayItem item) {
+				
+				anotherOverlayItemArray = new ArrayList<OverlayItem>();
+				anotherOverlayItemArray.add(item);
+				
+				
+		        		
+		        		
+			    myOpenMapView.getOverlays().add(anotherItemizedIconOverlay);
+		        
+				Toast.makeText(NewVenueActivity.this, 
+						item.mDescription + "\n"
+						+ item.mTitle + "\n"
+						+ item.mGeoPoint.getLatitudeE6() + " : " + item.mGeoPoint.getLongitudeE6(), 
+						Toast.LENGTH_LONG).show();
+				return true;
+			}
+			
+	    	
+	    };
+	
+	    ItemizedIconOverlay<OverlayItem> anotherItemizedIconOverlay = new ItemizedIconOverlay<OverlayItem>
+		(this, anotherOverlayItemArray, myOnItemGestureListener);
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
@@ -100,9 +176,9 @@ public class NewVenueActivity extends Activity
     	Boolean needed=false;
     	if (mMap == null) 
     	{
-    		needed=true;
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map2))
-                                .getMap();
+    		//needed=true;
+           // mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map2))
+             //                   .getMap();
             if (mMap != null) {}
                 // The Map is verified. It is now safe to manipulate the map.
 
